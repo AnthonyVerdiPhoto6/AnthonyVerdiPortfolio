@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import Image from "next/image";
 
 type Photo = {
   src: string;
@@ -64,11 +65,16 @@ export default function FeaturedPhotosGallery({
           View
         </div>
 
-        <img
-          src={photo.src}
-          alt={photo.alt}
-          className="block h-auto w-full object-cover transition duration-700 group-hover:scale-[1.03]"
-        />
+        <div className="relative w-full overflow-hidden">
+  <Image
+    src={photo.src}
+    alt={photo.alt}
+    width={1600}
+    height={1200}
+    sizes="(max-width: 640px) 100vw, 50vw"
+    className="block h-auto w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+  />
+</div>
       </button>
     );
   })}
@@ -94,11 +100,16 @@ export default function FeaturedPhotosGallery({
             </button>
 
             <div className="relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.02)_100%)] shadow-[0_30px_90px_rgba(0,0,0,0.4)]">
-              <img
-                src={photos[selectedIndex].src}
-                alt={photos[selectedIndex].alt}
-                className="max-h-[82vh] w-full object-contain"
-              />
+              <div className="relative w-full">
+  <Image
+    src={photos[selectedIndex].src}
+    alt={photos[selectedIndex].alt}
+    width={2400}
+    height={1800}
+    sizes="100vw"
+    className="max-h-[82vh] w-full object-contain"
+  />
+</div>
 
 
               <button
