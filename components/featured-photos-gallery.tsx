@@ -30,6 +30,11 @@ export default function FeaturedPhotosGallery({
     setSelectedIndex((selectedIndex + 1) % photos.length);
   };
 
+const preloadImage = (src: string) => {
+  const img = new window.Image();
+  img.src = src;
+};
+  
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (selectedIndex === null) return;
@@ -43,6 +48,16 @@ export default function FeaturedPhotosGallery({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex]);
 
+useEffect(() => {
+  if (selectedIndex === null || photos.length === 0) return;
+
+  const prevIndex = (selectedIndex - 1 + photos.length) % photos.length;
+  const nextIndex = (selectedIndex + 1) % photos.length;
+
+  preloadImage(photos[prevIndex].src);
+  preloadImage(photos[nextIndex].src);
+}, [selectedIndex, photos]);
+  
   return (
     <>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
