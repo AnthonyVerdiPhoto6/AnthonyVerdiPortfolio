@@ -56,7 +56,7 @@ export default function AboutPage() {
           <div className="w-full max-w-[22rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_24%_20%,rgba(255,255,255,0.08),transparent_22%),linear-gradient(135deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.02)_100%)] shadow-[0_20px_60px_rgba(0,0,0,0.22)]">
             <div className="absolute" />
             <Image
-              src="/portfolio-assets/photos/about-me/anthony-photo-01.jpg"
+              src="https://ik.imagekit.io/ql5llyrpx/about-me/anthony-photo-01.jpg?updatedAt=1777502192857"
               alt="Anthony Verdi at a music festival"
               width={900}
               height={1200}
