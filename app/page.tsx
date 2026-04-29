@@ -8,7 +8,7 @@ export default function Home() {
     <main className="intro-page">
       <div className="hero-media">
         <Image
-          src="/portfolio-assets/photos/hero/hero-01.jpg"
+          src="https://ik.imagekit.io/ql5llyrpx/hero/hero-01.JPG?updatedAt=1777502162316"
           alt="Anthony Verdi concert photography hero image"
           fill
           priority
