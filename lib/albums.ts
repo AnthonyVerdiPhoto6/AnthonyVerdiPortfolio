@@ -9,6 +9,7 @@ const ALBUM_DISPLAY_NAMES: Record<string, string> = {
   "lorde-2hollis": "Lorde & 2hollis",
   tokischa: "Tokischa",
   "baby-keem": "Baby Keem",
+  "pinkpantheress": "PinkPantheress",
 };
 
 export type AlbumSummary = {
