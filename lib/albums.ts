@@ -1,7 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
+import { getImageKitFolders, getImageKitImages } from "./imagekit-assets";
 
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
+const ARTISTS_FOLDER = "/artists";
 
 const ALBUM_DISPLAY_NAMES: Record<string, string> = {
   dababy: "DaBaby",
@@ -28,16 +27,6 @@ export type AlbumDetail = {
   }[];
 };
 
-function isImageFile(fileName: string) {
-  return IMAGE_EXTENSIONS.some((ext) => fileName.toLowerCase().endsWith(ext));
-}
-
-function sortNaturally(values: string[]) {
-  return values.sort((a, b) =>
-    a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
-  );
-}
-
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -46,56 +35,27 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function publicPath(...segments: string[]) {
-  return "/" + segments.map((segment) => encodeURIComponent(segment)).join("/");
-}
-
-function cleanAltText(fileName: string) {
-  return fileName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").trim();
-}
-
-function getArtistsRoot() {
-  return path.join(
-    process.cwd(),
-    "public",
-    "portfolio-assets",
-    "photos",
-    "artists"
-  );
+function getAlbumDisplayName(slug: string, folderName: string) {
+  return ALBUM_DISPLAY_NAMES[slug] ?? folderName;
 }
 
 export async function getAlbums(): Promise<AlbumSummary[]> {
-  const artistsRoot = getArtistsRoot();
-
   try {
-    const entries = await fs.readdir(artistsRoot, { withFileTypes: true });
-
-    const albumFolders = entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name);
+    const folders = await getImageKitFolders(ARTISTS_FOLDER);
 
     const albums = await Promise.all(
-      albumFolders.map(async (folderName) => {
-        const albumPath = path.join(artistsRoot, folderName);
-        const files = sortNaturally(await fs.readdir(albumPath));
-        const imageFiles = files.filter(isImageFile);
+      folders.map(async (folder) => {
+        const slug = slugify(folder.name);
+        const photos = await getImageKitImages(folder.path);
 
-        if (imageFiles.length === 0) return null;
+        if (photos.length === 0) return null;
 
-        const slug = slugify(folderName);
-
-return {
-  name: ALBUM_DISPLAY_NAMES[slug] ?? folderName,
-  slug,
-  coverSrc: publicPath(
-    "portfolio-assets",
-    "photos",
-    "artists",
-    folderName,
-    imageFiles[0]
-  ),
-  photoCount: imageFiles.length,
-};
+        return {
+          name: getAlbumDisplayName(slug, folder.name),
+          slug,
+          coverSrc: photos[0].src,
+          photoCount: photos.length,
+        };
       })
     );
 
@@ -108,7 +68,7 @@ return {
         })
       );
   } catch (error) {
-    console.error("Could not load albums:", error);
+    console.error("Could not load albums from ImageKit:", error);
     return [];
   }
 }
@@ -116,37 +76,26 @@ return {
 export async function getAlbumBySlug(
   slug: string
 ): Promise<AlbumDetail | null> {
-  const artistsRoot = getArtistsRoot();
-
   try {
-    const entries = await fs.readdir(artistsRoot, { withFileTypes: true });
+    const folders = await getImageKitFolders(ARTISTS_FOLDER);
 
-    const match = entries.find(
-      (entry) => entry.isDirectory() && slugify(entry.name) === slug
-    );
+    const match = folders.find((folder) => slugify(folder.name) === slug);
 
     if (!match) return null;
 
-    const albumPath = path.join(artistsRoot, match.name);
-    const files = sortNaturally(await fs.readdir(albumPath));
-    const imageFiles = files.filter(isImageFile);
+    const photos = await getImageKitImages(match.path);
+
+    if (photos.length === 0) return null;
 
     return {
-  name: ALBUM_DISPLAY_NAMES[slug] ?? match.name,
-  slug,
-  photos: imageFiles.map((fileName) => ({
-    src: publicPath(
-      "portfolio-assets",
-      "photos",
-      "artists",
-      match.name,
-      fileName
-    ),
-    alt: cleanAltText(fileName),
-  })),
-};
+      name: getAlbumDisplayName(slug, match.name),
+      slug,
+      photos,
+    };
   } catch (error) {
-    console.error("Could not load album:", error);
+    console.error("Could not load album from ImageKit:", error);
     return null;
   }
 }
+
+export const getAlbum = getAlbumBySlug;
