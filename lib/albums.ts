@@ -9,6 +9,10 @@ const ALBUM_DISPLAY_NAMES: Record<string, string> = {
   "lorde-2hollis": "Lorde & 2hollis",
   tokischa: "Tokischa",
   "baby-keem": "Baby Keem",
+<<<<<<< HEAD
+=======
+  "pinkpantheress": "PinkPantheress",
+>>>>>>> 5c3eb179c99861a12846bbafad1bc27209540a99
 };
 
 export type AlbumSummary = {
@@ -98,4 +102,8 @@ export async function getAlbumBySlug(
   }
 }
 
+<<<<<<< HEAD
 export const getAlbum = getAlbumBySlug;
+=======
+export const getAlbum = getAlbumBySlug;
+>>>>>>> 5c3eb179c99861a12846bbafad1bc27209540a99
