@@ -1,39 +1,12 @@
-import fs from "fs/promises";
-import path from "path";
 import SiteHeader from "../../components/site-header";
 import FeaturedPhotosGallery from "../../components/featured-photos-gallery";
 import SiteFooter from "../../components/site-footer";
+import { getImageKitImages } from "../../lib/imagekit-assets";
 
-const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".avif"];
+export const revalidate = 300;
 
 async function getFeaturedPhotos() {
-  const photosDirectory = path.join(
-    process.cwd(),
-    "public",
-    "portfolio-assets",
-    "photos",
-    "main-photos"
-  );
-
-  try {
-    const files = await fs.readdir(photosDirectory);
-
-    return files
-      .filter((file) =>
-        IMAGE_EXTENSIONS.some((ext) => file.toLowerCase().endsWith(ext))
-      )
-      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-      .map((file) => ({
-        src: `/portfolio-assets/photos/main-photos/${file}`,
-        alt: file
-          .replace(/\.[^/.]+$/, "")
-          .replace(/[-_]/g, " ")
-          .trim(),
-      }));
-  } catch (error) {
-    console.error("Could not load featured photos:", error);
-    return [];
-  }
+  return getImageKitImages("/main-photos");
 }
 
 export default async function FeaturedPhotosPage() {
@@ -61,17 +34,14 @@ export default async function FeaturedPhotosPage() {
 
           {photos.length === 0 ? (
             <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] px-6 py-10 text-white/70 backdrop-blur-md">
-              No photos were found in{" "}
-              <span className="text-white/90">
-                public/portfolio-assets/photos/main-photos
-              </span>
-              .
+              No photos were found in ImageKit.
             </div>
           ) : (
             <FeaturedPhotosGallery photos={photos} />
           )}
         </div>
       </section>
+
       <SiteFooter />
     </main>
   );
