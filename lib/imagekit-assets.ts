@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const IMAGEKIT_URL_ENDPOINT =
   process.env.IMAGEKIT_URL_ENDPOINT || "https://ik.imagekit.io/ql5llyrpx";
 
@@ -77,7 +76,6 @@ export async function getImageKitFolders(folderPath: string) {
       name: asset.name,
       path: asset.folderPath || `${folderPath}/${asset.name}`,
     }));
-=======
 const IMAGEKIT_URL_ENDPOINT =
   process.env.IMAGEKIT_URL_ENDPOINT || "https://ik.imagekit.io/ql5llyrpx";
 
@@ -156,5 +154,4 @@ export async function getImageKitFolders(folderPath: string) {
       name: asset.name,
       path: asset.folderPath || `${folderPath}/${asset.name}`,
     }));
->>>>>>> 5c3eb179c99861a12846bbafad1bc27209540a99
 }
