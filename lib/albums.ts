@@ -99,8 +99,4 @@ export async function getAlbumBySlug(
   }
 }
 
-<<<<<<< HEAD
 export const getAlbum = getAlbumBySlug;
-=======
-export const getAlbum = getAlbumBySlug;
->>>>>>> 5c3eb179c99861a12846bbafad1bc27209540a99
