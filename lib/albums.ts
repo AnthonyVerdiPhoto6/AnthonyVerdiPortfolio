@@ -8,7 +8,7 @@ const ALBUM_DISPLAY_NAMES: Record<string, string> = {
   "jid-yung-nudy": "JID & Yung Nudy",
   "lorde-2hollis": "Lorde & 2hollis",
   tokischa: "Tokischa",
-  "baby-keem": "Baby Keem",
+  "baby-keem": "Baby Keam",
   "pinkpantheress": "PinkPantheress",
 <<<<<<< HEAD
 =======  
