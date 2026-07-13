@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LuInstagram } from "react-icons/lu";
 import { FaTiktok } from "react-icons/fa";
 
@@ -13,19 +14,36 @@ const navLinks = [
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50">
       <div className="border-b border-white/10 bg-[linear-gradient(135deg,rgba(5,5,5,0.78)_0%,rgba(22,22,22,0.68)_35%,rgba(54,54,54,0.26)_55%,rgba(10,10,10,0.80)_100%)] backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
           <Link
             href="/featured-photos"
-            className="text-[0.8rem] font-medium uppercase tracking-[0.35em] text-white/90 transition hover:text-white"
+            className="whitespace-nowrap text-[0.72rem] font-medium uppercase tracking-[0.28em] text-white/90 transition hover:text-white sm:text-[0.8rem] sm:tracking-[0.35em]"
           >
             Anthony Verdi
           </Link>
 
-          <div className="flex items-center gap-6">
+          {/* Phone menu button */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((current) => !current)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+            className="rounded-full border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] px-4 py-2 text-[0.62rem] uppercase tracking-[0.24em] text-white/80 transition hover:border-white/20 hover:text-white md:hidden"
+          >
+            {menuOpen ? "Close" : "Menu"}
+          </button>
+
+          {/* Existing desktop layout */}
+          <div className="hidden items-center gap-6 md:flex">
             <nav className="flex items-center gap-2 sm:gap-3">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
@@ -46,30 +64,70 @@ export default function SiteHeader() {
               })}
             </nav>
 
-            <div className="flex items-center gap-3">
-              <Link
-                href="https://www.instagram.com/from.the_pit/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12),transparent_60%),linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] text-white/76 transition hover:scale-[1.04] hover:text-white"
-              >
-                <LuInstagram className="text-[1.1rem]" />
-              </Link>
-
-              <Link
-                href="https://www.tiktok.com/@from_thepit?is_from_webapp=1&sender_device=pc"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="TikTok"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12),transparent_60%),linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] text-white/76 transition hover:scale-[1.04] hover:text-white"
-              >
-                <FaTiktok className="text-[1.05rem]" />
-              </Link>
-            </div>
+            <SocialLinks />
           </div>
+        </div>
+
+        {/* Phone dropdown */}
+        <div
+          id="mobile-navigation"
+          className={`overflow-hidden transition-all duration-300 md:hidden ${
+            menuOpen
+              ? "max-h-[25rem] border-t border-white/10 opacity-100"
+              : "max-h-0 border-t border-transparent opacity-0"
+          }`}
+        >
+          <nav className="px-5 pb-5 pt-2">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block border-b border-white/10 py-4 text-[0.72rem] uppercase tracking-[0.26em] transition ${
+                    isActive
+                      ? "text-white"
+                      : "text-white/62 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+
+            <div className="flex items-center gap-3 pt-5">
+              <SocialLinks />
+            </div>
+          </nav>
         </div>
       </div>
     </header>
+  );
+}
+
+function SocialLinks() {
+  return (
+    <div className="flex items-center gap-3">
+      <Link
+        href="https://www.instagram.com/from.the_pit/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12),transparent_60%),linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] text-white/76 transition hover:scale-[1.04] hover:text-white"
+      >
+        <LuInstagram className="text-[1.1rem]" />
+      </Link>
+
+      <Link
+        href="https://www.tiktok.com/@from_thepit?is_from_webapp=1&sender_device=pc"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="TikTok"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12),transparent_60%),linear-gradient(135deg,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.03)_100%)] text-white/76 transition hover:scale-[1.04] hover:text-white"
+      >
+        <FaTiktok className="text-[1.05rem]" />
+      </Link>
+    </div>
   );
 }
